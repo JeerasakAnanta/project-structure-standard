@@ -1,12 +1,13 @@
 # Frontend Project Structure Standard
 
+
 **Stack:** Vite + React + TypeScript
-**ใช้สำหรับ:** มาตรฐานโครงสร้างโปรเจกต์หน้าบ้าน ของทีมเรา
+**ใช้สำหรับ:** ใช้งาน สำหรับการพัฒนา โครงสร้างโปรเจกต์ หน้าบ้าน ของทีมเรา
 
 ---
 
 ## หลักการ (Principles)
-
+  
 1. **Shared อยู่ชั้นบน, feature-specific อยู่ใน feature** — ถ้าโค้ดใช้หลาย feature ให้ไว้ชั้นบน (`components/`, `hooks/`, `lib/`) ถ้าใช้เฉพาะ feature เดียวให้ co-locate ไว้ใน `features/<name>/`
 2. **เลือกแล้วต้องสม่ำเสมอ** — ทุกคนในทีมวางของที่เดิมเสมอ
 3. **Flat ไว้ก่อน** — อย่าซ้อน folder ลึกเกินจำเป็น
@@ -183,5 +184,6 @@ import { useAuth } from '@/features/auth'
 - **Husky + lint-staged** — รัน lint/format อัตโนมัติก่อน commit
 
 ---
+# สร้างโปรเจกต์ใหม่ 
 
 *เริ่มโปรเจกต์:* `npm create vite@latest my-app -- --template react-ts`

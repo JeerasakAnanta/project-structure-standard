@@ -1,44 +1,48 @@
-# Project Structure Standards
+# projects structure standards
 
-A comprehensive guide to organizing and structuring projects across different technology stacks and architectural patterns.
+คู่มือที่ครอบคลุมสำหรับการจัดระเบียบและสร้างโครงสร้างโปรเจกต์ในระบบเทคโนโลยี และรูปแบบสถาปัตยกรรมที่แตกต่างกัน
 
-## Overview
+## ภาพรวม
 
-This repository contains standardized project structures and best practices for three core project types:
+ที่เก็บข้อมูลนี้มีโครงสร้างโปรเจกต์มาตรฐานและแนวปฏิบัติที่ดีที่สุดสำหรับโปรเจกต์หลักสามประเภท:
 
-- **Frontend Applications** — Web applications built with modern frontend frameworks
-- **Backend Services** — Server-side applications and APIs
-- **AI Services** — Machine learning and AI-powered applications
+- **แอปพลิเคชัน Frontend** — เว็บแอปพลิเคชันที่สร้างด้วย Framework Frontend สมัยใหม่
+- **บริการ Backend** — แอปพลิเคชันฝั่งเซิร์ฟเวอร์และ API
+- **บริการ AI** — แอปพลิเคชันที่ขับเคลื่อนด้วยแมชชีนเลิร์นนิงและ AI
 
-Each structure guide provides:
-- Directory organization and naming conventions
-- File and folder hierarchy recommendations
-- Best practices for code organization
-- Configuration and environment setup
-- Testing and deployment considerations
+แต่ละคู่มือโครงสร้างมีให้:
 
-## Project Structures
+- การจัดระเบียบและการตั้งชื่อไดเรกทอรี
+- คำแนะนำเกี่ยวกับลำดับชั้นของไฟล์และโฟลเดอร์
+- แนวปฏิบัติที่ดีที่สุดสำหรับการจัดระเบียบโค้ด
+- การตั้งค่า และการตั้งค่าสภาพแวดล้อม
+- การพิจารณาการทดสอบและการปรับใช้
 
-### 1. [Frontend Project Structure Standard](./1_Frontend_Project_Structure_Standard.md)
-Guidelines for organizing frontend applications with considerations for component organization, styling, state management, and asset handling.
+## โครงสร้างโปรเจกต์
 
-### 2. [Backend Project Structure](./2_Backend_Project_Structure.md)
-Recommendations for backend service architecture including API design, database organization, middleware structure, and service configuration.
+### 1. [มาตรฐานโครงสร้าง Frontend](./1_Frontend_Project_Structure_Standard.md)
 
-### 3. [AI Service Project Structure](./3-AI_Service_Project_Structure.md)
-Best practices for AI and machine learning projects covering model organization, training pipelines, data management, and inference services.
+แนวทางสำหรับการจัดระเบียบแอปพลิเคชัน Frontend พร้อมพิจารณาการจัดระเบียบคอมโพเนนต์ สไตล์ การจัดการสถานะ และการจัดการสินทรัพย์
 
-## Getting Started
+### 2. [โครงสร้างโปรเจกต์ Backend](./2_Backend_Project_Structure.md)
 
-1. Choose the project structure that matches your use case
-2. Review the corresponding documentation file
-3. Apply the structure to your project
-4. Customize based on your specific requirements
+คำแนะนำสำหรับสถาปัตยกรรมบริการ Backend รวมถึงการออกแบบ API การจัดระเบียบฐานข้อมูล โครงสร้าง Middleware และการตั้งค่าบริการ
 
-## Usage
+### 3. [โครงสร้างโปรเจกต์บริการ AI](./3-AI_Service_Project_Structure.md)
 
-These standards serve as templates and guidelines. Adapt them to your project's specific needs while maintaining the core organizational principles.
+แนวปฏิบัติที่ดีที่สุดสำหรับโปรเจกต์ AI และแมชชีนเลิร์นนิง ครอบคลุมการจัดระเบียบโมเดล ท่อ Training การจัดการข้อมูล และบริการอนุมาน
+
+## เริ่มต้นใช้งาน
+
+1. เลือกโครงสร้างโปรเจกต์ที่ตรงกับกรณีการใช้งานของคุณ
+2. ตรวจสอบไฟล์เอกสารที่เกี่ยวข้อง
+3. นำโครงสร้างไปใช้กับโปรเจกต์ของคุณ
+4. ปรับแต่งตามข้อกำหนดเฉพาะของคุณ
+
+## การใช้งาน
+
+มาตรฐานเหล่านี้ทำหน้าที่เป็นเทมเพลตและแนวทาง ปรับมันให้เหมาะสมกับความต้องการเฉพาะของโปรเจกต์ของคุณในขณะที่รักษาหลักการองค์กรหลักไว้
 
 ---
 
-*Last Updated: May 30, 2026*
+*อัปเดตล่าสุด: 30 พฤษภาคม 2569*

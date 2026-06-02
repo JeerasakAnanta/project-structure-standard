@@ -22,50 +22,71 @@
 ```
 backend/
 ├── src/
-│   ├── server.ts                # bootstrap: โหลด env, เชื่อม DB, app.listen()
-│   ├── app.ts                   # สร้าง express app, ผูก middleware + route (ไม่ listen)
+│   ├── server.ts                    # bootstrap: โหลด env, เชื่อม DB, app.listen()
+│   ├── app.ts                       # สร้าง express app, ผูก middleware + route (ไม่ listen)
 │   │
-│   ├── config/                  # อ่าน + validate env, ค่าคงที่ของระบบ
-│   │   ├── env.ts               # validate env ตอนเริ่ม (ขาดตัวไหน fail ทันที)
+│   ├── config/                      # อ่าน + validate env, ค่าคงที่ของระบบ
+│   │   ├── env.ts                   # validate env ตอนเริ่ม (ขาดตัวไหน fail ทันที)
 │   │   └── index.ts
 │   │
-│   ├── routes/                  # map path → controller (บางที่สุด ไม่มี logic)
-│   │   ├── index.ts             # รวมทุก route
-│   │   ├── auth.routes.ts
-│   │   └── ai.routes.ts
+│   ├── modules/                     # ⭐ แบ่งตาม feature — แต่ละทีม/คนถือ 1 module
+│   │   ├── auth/                    # 👤 ทีม A ดูแล
+│   │   │   ├── auth.routes.ts        # path ของ feature นี้
+│   │   │   ├── auth.controller.ts    # รับ req/res
+│   │   │   ├── auth.service.ts       # business logic (OIDC flow, session)
+│   │   │   ├── auth.validator.ts     # zod schema
+│   │   │   ├── auth.types.ts         # type เฉพาะ feature นี้
+│   │   │   └── auth.test.ts          # เทสอยู่ติดกับโค้ด (co-located)
+│   │   │
+│   │   └── ai/                       # 🤖 ทีม B ดูแล
+│   │       ├── ai.routes.ts
+│   │       ├── ai.controller.ts
+│   │       ├── ai.service.ts          # proxy ไป Python AI service
+│   │       ├── ai.validator.ts
+│   │       ├── ai.types.ts
+│   │       └── ai.test.ts
 │   │
-│   ├── controllers/             # รับ req/res, เรียก service, ส่ง response
-│   │   ├── auth.controller.ts
-│   │   └── ai.controller.ts
+│   ├── repositories/                # data layer ใช้ร่วมข้าม module (Prisma)
+│   │   ├── user.repository.ts        # entity user ถูกหลาย module เรียกใช้
+│   │   └── index.ts
 │   │
-│   ├── services/                # ⭐ business logic จริง (ไม่รู้จัก req/res)
-│   │   ├── auth.service.ts      # จัดการ OIDC flow, สร้าง session
-│   │   └── ai.service.ts        # proxy ไป Python AI service
+│   ├── routes/
+│   │   └── index.ts                  # รวม routes จากทุก module เข้าด้วยกัน
 │   │
-│   ├── repositories/            # data layer — คุยกับ DB เท่านั้น (Prisma/etc.)
-│   │   └── user.repository.ts
-│   │
-│   ├── middlewares/             # auth, error handler, validation, rate limit
-│   │   ├── auth.middleware.ts   # ตรวจ session ก่อนเข้า protected route
-│   │   ├── error.middleware.ts  # centralized error handler
+│   ├── middlewares/                 # ใช้ร่วมทั้งระบบ
+│   │   ├── auth.middleware.ts        # ตรวจ session ก่อนเข้า protected route
+│   │   ├── error.middleware.ts       # centralized error handler
 │   │   └── validate.middleware.ts
 │   │
-│   ├── validators/              # schema ตรวจ input (zod)
-│   │   └── ai.validator.ts
+│   ├── shared/                       # 🔁 ของกลางที่ทุก module ใช้ได้
+│   │   ├── types/
+│   │   │   └── index.ts              # type ร่วมทั้งระบบ
+│   │   ├── utils/
+│   │   │   ├── logger.ts             # pino/winston instance
+│   │   │   └── ApiError.ts           # custom error class
+│   │   └── lib/
+│   │       └── aiClient.ts           # axios instance ชี้ Python AI service
 │   │
-│   ├── types/                   # TypeScript type ที่ใช้ร่วม
-│   │   └── index.ts
-│   │
-│   ├── utils/                   # helper pure (logger wrapper, format)
-│   │   ├── logger.ts            # pino/winston instance
-│   │   └── ApiError.ts          # custom error class
-│   │
-│   └── lib/                     # client ภายนอกที่ตั้งค่าครั้งเดียว
-│       └── aiClient.ts          # axios instance ชี้ Python AI service
+│   └── db/
+│       ├── prisma.ts                 # PrismaClient instance ตัวเดียวทั้งระบบ
+│       └── index.ts
 │
-├── tests/                       # โครงสร้างเลียนแบบ src/
+├── prisma/
+│   └── schema.prisma                 # schema กลาง — review ร่วมกันเวลาแก้
+│
+├── tests/
+│   ├── integration/                  # เทสข้าม module / e2e
+│   └── setup.ts                      # test config ร่วม (db mock, fixtures)
+│
+├── docs/                             # 📄 เอกสารทีม — ลด onboarding cost
+│   ├── architecture.md               # อธิบายโครงสร้าง + ทิศทาง dependency
+│   └── conventions.md                # naming, commit, branch convention
+│
+├── .github/
+│   └── CODEOWNERS                    # ผูก module → คน/ทีม รีวิว PR อัตโนมัติ
+│
 ├── .env
-├── .env.example                 # commit อันนี้ (ไม่ commit .env จริง)
+├── .env.example                      # commit อันนี้ (ไม่ commit .env จริง)
 ├── .eslintrc.cjs
 ├── .prettierrc
 ├── tsconfig.json
@@ -94,6 +115,7 @@ backend/
 ## Best Practices
 
 ### 1. แยก app กับ server
+
 ```ts
 // app.ts — ประกอบ express (test ตรงนี้ได้โดยไม่ต้อง listen)
 import express from 'express'
@@ -110,15 +132,18 @@ app.listen(env.PORT, () => logger.info(`running on ${env.PORT}`))
 ```
 
 ### 2. Centralized error handling
+
 - โยน `ApiError` จาก service → จับที่ error middleware ตัวเดียว
 - ใช้ wrapper หรือ `express-async-errors` กัน async error หลุด
 - **ห้ามส่ง stack trace ออก response ใน production**
 
 ### 3. Config + secret
+
 - อ่าน env ผ่าน `config/env.ts` และ **validate ตอนเริ่ม** (เช่นด้วย zod) — ขาดตัวไหน crash ทันที ดีกว่าพังตอน runtime
 - ห้าม commit `.env` — commit แค่ `.env.example`
 
 ### 4. Security (สำคัญมากสำหรับงานธนาคาร)
+
 - `helmet` — ตั้ง security header
 - `cors` — จำกัด origin ให้เฉพาะ frontend ของเรา
 - `express-rate-limit` — กัน brute force / abuse
@@ -126,11 +151,13 @@ app.listen(env.PORT, () => logger.info(`running on ${env.PORT}`))
 - session cookie เป็น `httpOnly` + `Secure` + `SameSite`
 
 ### 5. Logging
+
 - ใช้ structured logger (`pino` หรือ `winston`) **ไม่ใช่ `console.log`**
 - ใส่ request id เพื่อ trace ข้าม service ได้
 - **ห้าม log ข้อมูลอ่อนไหว** (token, รหัส, ข้อมูลลูกค้า)
 
 ### 6. Production
+
 - รันด้วย **PM2** (cluster mode ใช้หลาย core ได้)
 - ทำ **graceful shutdown** — ปิด DB connection ก่อน process ตาย
 - มี health check endpoint (`/health`) ให้ load balancer เช็ก
@@ -140,11 +167,13 @@ app.listen(env.PORT, () => logger.info(`running on ${env.PORT}`))
 ## หมายเหตุสำหรับบริบทนี้ (ธ.ก.ส.)
 
 ### Express = ประตูเดียว (BFF / Gateway)
+
 - **OIDC flow** อยู่ใน `auth.service.ts` — Express ถือ client_secret, แลก code เป็น token, สร้าง session
 - frontend ได้แค่ httpOnly session cookie — ไม่เห็น token ดิบ
 - `auth.middleware.ts` ตรวจ session ก่อนเข้า protected route
 
 ### Proxy ไป Python AI service
+
 - `ai.service.ts` เรียก Python ผ่าน `lib/aiClient.ts`
 - แนบ **internal JWT สั้นๆ ที่ Express เซ็น** ไป — Python แค่ตรวจ JWT นี้ ไม่ต้องรู้จัก OIDC
 - Python AI service เป็น **internal-only** ไม่เปิด public
@@ -176,6 +205,6 @@ export async function askAI(question: string, userId: string) {
 
 ## อ้างอิง
 
-- nodebestpractices (de-facto standard): https://github.com/goldbergyoni/nodebestpractices
-- Express security best practices: https://expressjs.com/en/advanced/best-practice-security.html
-- Express performance best practices: https://expressjs.com/en/advanced/best-practice-performance.html
+- nodebestpractices (de-facto standard): <https://github.com/goldbergyoni/nodebestpractices>
+- Express security best practices: <https://expressjs.com/en/advanced/best-practice-security.html>
+- Express performance best practices: <https://expressjs.com/en/advanced/best-practice-performance.html>
